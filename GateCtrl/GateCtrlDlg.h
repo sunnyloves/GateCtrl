@@ -40,4 +40,6 @@ public:
 
 
 
+	CStatic m_InnerLevelStatic;
+	CStatic m_OutLevelStatic;
 };

@@ -28,7 +28,9 @@ void CGateCtrlDlg::DoDataExchange(CDataExchange* pDX)
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_COMCMB, m_ComCMB);
 	DDX_Control(pDX, IDC_OPENCOMBT, m_OpenCloseCOMBT);
-	
+
+	DDX_Control(pDX, IDC_INNERLEVELSTATIC, m_InnerLevelStatic);
+	DDX_Control(pDX, IDC_OUTERLEVELSTATIC, m_OutLevelStatic);
 }
 
 BEGIN_MESSAGE_MAP(CGateCtrlDlg, CDialogEx)
@@ -54,8 +56,8 @@ BOOL CGateCtrlDlg::OnInitDialog()
 	m_ComCMB.AddString(_T("COM1"));
 	m_ComCMB.AddString(_T("COM2"));
 	m_ComCMB.SetCurSel(0);
-
-
+	m_InnerLevelStatic.SetWindowTextW(_T("0.0"));
+	m_OutLevelStatic.SetWindowTextW(_T("0.0"));
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
