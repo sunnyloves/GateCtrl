@@ -99,8 +99,10 @@
     <None Include="res\GateCtrl.rc2" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CnCom\CnComm.h" />
     <ClInclude Include="GateCtrl.h" />
     <ClInclude Include="GateCtrlDlg.h" />
+    <ClInclude Include="mscomm.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -108,6 +110,7 @@
   <ItemGroup>
     <ClCompile Include="GateCtrl.cpp" />
     <ClCompile Include="GateCtrlDlg.cpp" />
+    <ClCompile Include="mscomm.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -119,4 +122,9 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties RESOURCE_FILE="GateCtrl.rc" _x007B_648A5600-2C6E-101B-82B6-000000000014_x007D_="CMscomm" />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>

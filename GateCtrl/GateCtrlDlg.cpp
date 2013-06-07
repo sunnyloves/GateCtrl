@@ -26,11 +26,15 @@ CGateCtrlDlg::CGateCtrlDlg(CWnd* pParent /*=NULL*/)
 void CGateCtrlDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_COMCMB, m_ComCMB);
+	DDX_Control(pDX, IDC_OPENCOMBT, m_OpenCloseCOMBT);
+	
 }
 
 BEGIN_MESSAGE_MAP(CGateCtrlDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_BN_CLICKED(IDC_OPENCOMBT, &CGateCtrlDlg::OnBnClickedOpencombt)
 END_MESSAGE_MAP()
 
 
@@ -46,6 +50,12 @@ BOOL CGateCtrlDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
 	// TODO: Add extra initialization here
+	bIsComOpen = false;
+	m_ComCMB.AddString(_T("COM1"));
+	m_ComCMB.AddString(_T("COM2"));
+	m_ComCMB.SetCurSel(0);
+
+
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -86,3 +96,48 @@ HCURSOR CGateCtrlDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+
+
+void CGateCtrlDlg::OnBnClickedOpencombt()
+{
+	// TODO: Add your control notification handler code here
+//没打开
+	if (!bIsComOpen)
+	{
+		CString sComStr;
+		int nComCurSel = 0;
+		nComCurSel = m_ComCMB.GetCurSel();
+		m_Comm.Open(nComCurSel+1);
+		if (m_Comm.IsOpen())
+		{
+			AfxMessageBox(_T("串口打开成功！"));
+			m_ComCMB.EnableWindow(FALSE);
+			m_OpenCloseCOMBT.SetWindowTextW(_T("关闭"));
+			bIsComOpen = true;
+		} 
+		else
+		{
+			AfxMessageBox(_T("串口打开失败！"));
+		}
+	}
+//串口已打开
+	else
+	{
+		if (m_Comm.IsOpen())
+		{
+			m_Comm.Close();
+			AfxMessageBox(_T("串口关闭！"));
+			m_ComCMB.EnableWindow(TRUE);
+			m_OpenCloseCOMBT.SetWindowTextW(_T("打开"));
+			bIsComOpen = false;
+		} 
+		else
+		{
+		}
+		
+	}
+	
+	
+	
+
+}

@@ -3,6 +3,8 @@
 //
 
 #pragma once
+#include "afxwin.h"
+#include "CnCom/CnComm.h"
 
 
 // CGateCtrlDlg dialog
@@ -27,5 +29,15 @@ protected:
 	virtual BOOL OnInitDialog();
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
+	afx_msg void OnBnClickedOpencombt();
+
 	DECLARE_MESSAGE_MAP()
+public:
+	CComboBox m_ComCMB;
+	CButton m_OpenCloseCOMBT;	
+	CnComm m_Comm;
+	bool bIsComOpen;
+
+
+
 };
