@@ -33,7 +33,7 @@ public:
 // Overrides
 public:
 	virtual BOOL InitInstance();
-
+	virtual BOOL ExitInstance();
 // Implementation
 	virtual void PreLoadState();
 	virtual void LoadCustomState();
