@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{92C0F1FF-11F7-4928-B990-717412BE2955}</ProjectGuid>
+    <ProjectGuid>{022F77E4-32A3-49DA-84B6-8B8935143BF0}</ProjectGuid>
     <RootNamespace>GateCtrl</RootNamespace>
     <Keyword>MFCProj</Keyword>
   </PropertyGroup>
@@ -95,22 +95,33 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
+    <None Include="res\buttons.bmp" />
+    <None Include="res\filelarge.bmp" />
+    <None Include="res\filesmall.bmp" />
     <None Include="res\GateCtrl.ico" />
     <None Include="res\GateCtrl.rc2" />
+    <None Include="res\GateCtrlDoc.ico" />
+    <None Include="res\main.bmp" />
+    <None Include="res\ribbon.mfcribbon-ms" />
+    <None Include="res\Toolbar.bmp" />
+    <None Include="res\Toolbar256.bmp" />
+    <None Include="res\writelarge.bmp" />
+    <None Include="res\writesmall.bmp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CnCom\CnComm.h" />
     <ClInclude Include="GateCtrl.h" />
-    <ClInclude Include="GateCtrlDlg.h" />
-    <ClInclude Include="mscomm.h" />
+    <ClInclude Include="GateCtrlDoc.h" />
+    <ClInclude Include="GateCtrlView.h" />
+    <ClInclude Include="MainFrm.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GateCtrl.cpp" />
-    <ClCompile Include="GateCtrlDlg.cpp" />
-    <ClCompile Include="mscomm.cpp" />
+    <ClCompile Include="GateCtrlDoc.cpp" />
+    <ClCompile Include="GateCtrlView.cpp" />
+    <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -122,9 +133,4 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
-  <ProjectExtensions>
-    <VisualStudio>
-      <UserProperties RESOURCE_FILE="GateCtrl.rc" _x007B_648A5600-2C6E-101B-82B6-000000000014_x007D_="CMscomm" />
-    </VisualStudio>
-  </ProjectExtensions>
 </Project>

@@ -46,15 +46,36 @@ res\GateCtrl.rc2
     Visual C++. You should place all resources not editable by
     the resource editor in this file.
 
-
 /////////////////////////////////////////////////////////////////////////////
 
-The application wizard creates one dialog class:
+For the main frame window:
+    The project includes a standard MFC interface.
 
-GateCtrlDlg.h, GateCtrlDlg.cpp - the dialog
-    These files contain your CGateCtrlDlg class.  This class defines
-    the behavior of your application's main dialog.  The dialog's template is
-    in GateCtrl.rc, which can be edited in Microsoft Visual C++.
+MainFrm.h, MainFrm.cpp
+    These files contain the frame class CMainFrame, which is derived from
+    CFrameWnd and controls all SDI frame features.
+
+res\Toolbar.bmp
+    This bitmap file is used to create tiled images for the toolbar.
+    The initial toolbar and status bar are constructed in the CMainFrame
+    class. Edit this toolbar bitmap using the resource editor, and
+    update the IDR_MAINFRAME TOOLBAR array in GateCtrl.rc to add
+    toolbar buttons.
+/////////////////////////////////////////////////////////////////////////////
+
+The application wizard creates one document type and one view:
+
+GateCtrlDoc.h, GateCtrlDoc.cpp - the document
+    These files contain your CGateCtrlDoc class.  Edit these files to
+    add your special document data and to implement file saving and loading
+    (via CGateCtrlDoc::Serialize).
+
+GateCtrlView.h, GateCtrlView.cpp - the view of the document
+    These files contain your CGateCtrlView class.
+    CGateCtrlView objects are used to view CGateCtrlDoc objects.
+
+
+
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -69,13 +90,6 @@ Resource.h
     This is the standard header file, which defines new resource IDs.
     Microsoft Visual C++ reads and updates this file.
 
-GateCtrl.manifest
-	Application manifest files are used by Windows XP to describe an applications
-	dependency on specific versions of Side-by-Side assemblies. The loader uses this
-	information to load the appropriate assembly from the assembly cache or private
-	from the application. The Application manifest  maybe included for redistribution
-	as an external .manifest file that is installed in the same folder as the application
-	executable or it may be included in the executable in the form of a resource.
 /////////////////////////////////////////////////////////////////////////////
 
 Other notes:
