@@ -12,6 +12,7 @@
 // GateCtrlView.h : interface of the CGateCtrlView class
 //
 
+
 #pragma once
 
 

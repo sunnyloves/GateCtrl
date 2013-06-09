@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include "ParaConfigDlg.h "
+
 class CMainFrame : public CFrameWndEx
 {
 	
@@ -43,12 +45,17 @@ protected:  // control bar embedded members
 	CMFCRibbonBar     m_wndRibbonBar;
 	CMFCRibbonApplicationButton m_MainButton;
 	CMFCToolBarImages m_PanelImages;
-
+	CParaConfigDlg m_wndParaConfigDlg;
 // Generated message map functions
 protected:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
+
+	afx_msg void OnConfigBT();
+	afx_msg void OnUpdateConfigButton(CCmdUI* pCmdUI);
+
 	DECLARE_MESSAGE_MAP()
 
+	void InitializeRibbon();
 };
 
 

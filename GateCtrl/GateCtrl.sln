@@ -1,7 +1,7 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GateCtrl", "GateCtrl.vcxproj", "{29462006-4109-4546-A6F8-58E315CB56AA}"
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GateCtrl", "GateCtrl.vcproj", "{A45174DD-DBC5-4916-9224-C9021B01E3CD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,10 +9,10 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{29462006-4109-4546-A6F8-58E315CB56AA}.Debug|Win32.ActiveCfg = Debug|Win32
-		{29462006-4109-4546-A6F8-58E315CB56AA}.Debug|Win32.Build.0 = Debug|Win32
-		{29462006-4109-4546-A6F8-58E315CB56AA}.Release|Win32.ActiveCfg = Release|Win32
-		{29462006-4109-4546-A6F8-58E315CB56AA}.Release|Win32.Build.0 = Release|Win32
+		{A45174DD-DBC5-4916-9224-C9021B01E3CD}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A45174DD-DBC5-4916-9224-C9021B01E3CD}.Debug|Win32.Build.0 = Debug|Win32
+		{A45174DD-DBC5-4916-9224-C9021B01E3CD}.Release|Win32.ActiveCfg = Release|Win32
+		{A45174DD-DBC5-4916-9224-C9021B01E3CD}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

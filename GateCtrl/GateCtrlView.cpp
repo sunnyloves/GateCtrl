@@ -13,11 +13,7 @@
 //
 
 #include "stdafx.h"
-// SHARED_HANDLERS can be defined in an ATL project implementing preview, thumbnail
-// and search filter handlers and allows sharing of document code with that project.
-#ifndef SHARED_HANDLERS
 #include "GateCtrl.h"
-#endif
 
 #include "GateCtrlDoc.h"
 #include "GateCtrlView.h"
@@ -32,8 +28,6 @@
 IMPLEMENT_DYNCREATE(CGateCtrlView, CView)
 
 BEGIN_MESSAGE_MAP(CGateCtrlView, CView)
-	ON_WM_CONTEXTMENU()
-	ON_WM_RBUTTONUP()
 END_MESSAGE_MAP()
 
 // CGateCtrlView construction/destruction
@@ -68,17 +62,15 @@ void CGateCtrlView::OnDraw(CDC* /*pDC*/)
 	// TODO: add draw code for native data here
 }
 
-void CGateCtrlView::OnRButtonUp(UINT /* nFlags */, CPoint point)
+void CGateCtrlView::OnRButtonUp(UINT nFlags, CPoint point)
 {
 	ClientToScreen(&point);
 	OnContextMenu(this, point);
 }
 
-void CGateCtrlView::OnContextMenu(CWnd* /* pWnd */, CPoint point)
+void CGateCtrlView::OnContextMenu(CWnd* pWnd, CPoint point)
 {
-#ifndef SHARED_HANDLERS
 	theApp.GetContextMenuManager()->ShowPopupMenu(IDR_POPUP_EDIT, point.x, point.y, this, TRUE);
-#endif
 }
 
 
