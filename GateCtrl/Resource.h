@@ -50,7 +50,6 @@
 #define IDS_RIBBON_COM                  308
 #define IDS_RIBBON_LEVELSTATION         309
 #define ID_RIBBON_CONFIG_BT             310
-#define IDD_DIALOG1                     316
 #define IDD_PARADLG                     316
 #define ID_WRITE_PASTEASHYPERLINK       32770
 #define IDC_CMFCPGCTRL					1000

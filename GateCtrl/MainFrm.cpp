@@ -48,14 +48,17 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	if (CFrameWndEx::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
-	BOOL bNameValid;
+//	BOOL bNameValid;
 
 	// set the visual manager used to draw all user interface elements
 	CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerOffice2007));
 
 	m_wndRibbonBar.Create(this);
 	InitializeRibbon();
+	
+	CheckConfigFile();
 
+	
 	// enable Visual Studio 2005 style docking window behavior
 	CDockingManager::SetDockingMode(DT_SMART);
 	// enable Visual Studio 2005 style docking window auto-hide behavior
@@ -216,4 +219,111 @@ void CMainFrame::OnConfigBT()
 void CMainFrame::OnUpdateConfigButton(CCmdUI* pCmdUI)
 {
 	
+}
+
+BOOL CMainFrame::CheckConfigFile(void)
+{
+	CFileFind m_ConfigFileFinder;
+	if (!m_ConfigFileFinder.FindFile(_T("config.xml")))
+	{
+		SetDefaultConfigFile();
+		GetConfigFromFile();
+	} 
+	else
+	{
+		
+		GetConfigFromFile();
+	}
+	return (TRUE);
+	
+}
+
+void CMainFrame::SetDefaultConfigFile(void)
+{
+	//根
+	m_ConfigXml.AddElem(_T("root"));
+	//一级
+	m_ConfigXml.AddChildElem(_T("通讯口"));
+	m_ConfigXml.IntoElem();
+	m_ConfigXml.AddChildElem(_T("串口"),_T("com1"));
+	m_ConfigXml.OutOfElem();
+	//一级
+	m_ConfigXml.AddChildElem(_T("水位站"));
+	m_ConfigXml.IntoElem();
+	//二级
+	m_ConfigXml.AddChildElem(_T("闸内水位站"));
+	m_ConfigXml.IntoElem();
+	m_ConfigXml.AddChildElem(_T("闸内水位站名称"),_T("闸内站 "));
+	m_ConfigXml.AddChildElem(_T("闸内水位站零点(cm)"),_T("0.0"));
+	m_ConfigXml.AddChildElem(_T("闸内水位站站号"),_T("1"));
+	m_ConfigXml.OutOfElem();
+	
+	//二级
+	m_ConfigXml.AddChildElem(_T("闸外水位站"));
+	m_ConfigXml.IntoElem();
+	m_ConfigXml.AddChildElem(_T("闸外水位站名称"),_T("闸外站"));
+	m_ConfigXml.AddChildElem(_T("闸外水位站零点(cm)"),_T("0.0"));
+	m_ConfigXml.AddChildElem(_T("闸外水位站站号"),_T("2"));
+	m_ConfigXml.OutOfElem();
+
+	m_ConfigXml.OutOfElem();
+	//一级
+	m_ConfigXml.AddChildElem(_T("水位差"));
+	m_ConfigXml.IntoElem();
+	m_ConfigXml.AddChildElem(_T("闸门开启水位差(cm)"),_T("0.0"));
+	m_ConfigXml.OutOfElem();
+
+	m_ConfigXml.Save(_T("config.xml"));
+}
+
+BOOL CMainFrame::GetConfigFromFile(void)
+{
+	BOOL b = FALSE;
+	m_ConfigXml.Load(_T("config.xml"));
+	m_ConfigXml.FindElem();
+	m_ConfigXml.IntoElem();
+	m_ConfigXml.FindChildElem(_T("通讯口"));
+	m_ConfigXml.IntoElem();	
+	ciConfigInfo.sCom = m_ConfigXml.GetData();
+	m_ConfigXml.OutOfElem();
+
+	//root结点
+	m_ConfigXml.FindElem(_T("水位站"));
+	m_ConfigXml.IntoElem();
+	m_ConfigXml.FindElem(_T("闸内水位站"));
+	m_ConfigXml.IntoElem();
+	b = m_ConfigXml.FindElem(_T("闸内水位站名称"));
+	ciConfigInfo.lsInnerStation.sStationName = m_ConfigXml.GetData();
+	m_ConfigXml.FindElem(_T("闸内水位站零点(cm)"));
+	ciConfigInfo.lsInnerStation.dbLevelZero = _wtof(m_ConfigXml.GetData());
+	m_ConfigXml.FindElem(_T("闸内水位站站号"));
+	ciConfigInfo.lsInnerStation.sStationNO = m_ConfigXml.GetData();
+	
+	m_ConfigXml.ResetPos();	
+	m_ConfigXml.FindElem();
+	m_ConfigXml.IntoElem();
+
+	m_ConfigXml.FindElem(_T("水位站"));
+	m_ConfigXml.IntoElem();
+	m_ConfigXml.FindElem(_T("闸外水位站"));
+	m_ConfigXml.IntoElem();
+	m_ConfigXml.FindElem(_T("闸外水位站名称"));	
+	ciConfigInfo.lsOuterStation.sStationName = m_ConfigXml.GetData();
+	m_ConfigXml.FindElem(_T("闸外水位站零点(cm)"));
+	ciConfigInfo.lsOuterStation.dbLevelZero = _wtof(m_ConfigXml.GetData());
+	m_ConfigXml.FindElem(_T("闸外水位站站号"));
+	ciConfigInfo.lsOuterStation.sStationNO = m_ConfigXml.GetData();
+
+	//root结点
+	m_ConfigXml.ResetPos();	
+	m_ConfigXml.FindElem();
+	m_ConfigXml.IntoElem();
+
+	m_ConfigXml.FindElem(_T("水位差"));
+	m_ConfigXml.IntoElem();
+	m_ConfigXml.FindElem(_T("闸门开启水位差(cm)"));
+	ciConfigInfo.dbLevelError = _wtof(m_ConfigXml.GetData());
+
+	
+	return 0;
 }

@@ -15,6 +15,25 @@
 #pragma once
 
 #include "ParaConfigDlg.h "
+#include "CMakeUp/Markup.h"
+
+
+typedef struct _LevelStation
+{
+	CString sStationName;
+	double dbLevelZero;
+	CString sStationNO;
+}LevelStation;
+
+
+
+typedef struct _ConfigInfo
+{
+	CString sCom;
+	LevelStation lsInnerStation;
+	LevelStation lsOuterStation;
+	double dbLevelError;
+}ConfigInfo;
 
 class CMainFrame : public CFrameWndEx
 {
@@ -46,6 +65,11 @@ protected:  // control bar embedded members
 	CMFCRibbonApplicationButton m_MainButton;
 	CMFCToolBarImages m_PanelImages;
 	CParaConfigDlg m_wndParaConfigDlg;
+
+	CMarkup m_ConfigXml;
+	
+
+
 // Generated message map functions
 protected:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
@@ -56,6 +80,13 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 	void InitializeRibbon();
+
+	BOOL CheckConfigFile(void);
+	void SetDefaultConfigFile(void);
+	BOOL GetConfigFromFile(void);	
+public:
+	ConfigInfo ciConfigInfo;
+
 };
 
 

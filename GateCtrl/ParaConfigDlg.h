@@ -1,5 +1,6 @@
 #pragma once
 
+
 #include "CMakeUp/Markup.h"
 
 // CParaConfigDlg dialog
@@ -22,19 +23,17 @@ protected:
 public:
 	virtual BOOL OnInitDialog();
 
-
 protected:
 	CMFCPropertyGridCtrl  m_PGCtrl;
 
 	CMFCPropertyGridProperty* pGroup0;
 	CMFCPropertyGridProperty* pGroup1;
 	CMFCPropertyGridProperty* pGroup2;
-	CMarkup m_ConfigXml;
-
-
-
-
+	
 public:
 	afx_msg void OnPaint();
 	afx_msg void OnBnClickedOk();
+	afx_msg LRESULT OnPropertyChanged(WPARAM,LPARAM);
+	void InitPGCtrl(void);
+	void InitColor(void);
 };
