@@ -18,6 +18,7 @@
 #include "CMakeUp/Markup.h"
 #include "CnCom/CnComm.h"
 
+
 typedef struct _LevelStation
 {
 	CString sStationName;
@@ -34,6 +35,8 @@ typedef struct _ConfigInfo
 	LevelStation lsOuterStation;
 	double dbLevelError;
 }ConfigInfo;
+
+
 
 class CMainFrame : public CFrameWndEx
 {
@@ -70,6 +73,7 @@ protected:  // control bar embedded members
 	
 	CnComm m_Com;
 
+	
 // Generated message map functions
 protected:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
@@ -82,6 +86,8 @@ protected:
 
 	afx_msg void OnStopCtrl();
 	afx_msg void OnUpdateStopButton(CCmdUI* pCmdUI);
+	afx_msg LRESULT OnComRecv(WPARAM wParam, LPARAM lParam);
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
 
 	DECLARE_MESSAGE_MAP()
 
@@ -95,6 +101,7 @@ public:
 	ConfigInfo ciConfigInfo;
 
 	void SaveConfigToFile(void);
+
 };
 
 

@@ -58,6 +58,9 @@
 #define IDS_RIBBON_START				317
 #define IDS_RIBBON_STOP					318
 #define IDS_RIBBON_RUNSTATE				319
+
+
+#define WM_CONFIGREADYMESSAGE			WM_USER+30
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED

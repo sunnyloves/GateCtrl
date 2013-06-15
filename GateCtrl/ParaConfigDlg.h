@@ -30,6 +30,8 @@ protected:
 	CMFCPropertyGridProperty* pGroup1;
 	CMFCPropertyGridProperty* pGroup3;
 	
+
+
 public:
 	afx_msg void OnPaint();
 	afx_msg void OnBnClickedOk();

@@ -44,13 +44,25 @@ public:
 #endif
 
 protected:
+	BOOL m_bIsInitDone;
+	BOOL m_bIsGateOpen;
+	double m_dbInnerLevel;
+	double m_dbOuterLevel;
+	double m_dbLevelError;
 
 // Generated message map functions
 protected:
 	afx_msg void OnFilePrintPreview();
 	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
 	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
+	afx_msg LRESULT OnInitView( WPARAM wParam, LPARAM lParam );
 	DECLARE_MESSAGE_MAP()
+public:
+	void ShowInitView(void);
+
+
+	afx_msg void OnSize(UINT nType, int cx, int cy);
+	void ShowStaticText(void);
 };
 
 #ifndef _DEBUG  // debug version in GateCtrlView.cpp

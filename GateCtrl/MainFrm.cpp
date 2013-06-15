@@ -14,8 +14,10 @@
 
 #include "stdafx.h"
 #include "GateCtrl.h"
-
+#include "GateCtrlDoc.h"
+#include "GateCtrlView.h"
 #include "MainFrm.h"
+#include "resource.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -37,6 +39,8 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWndEx)
 	ON_COMMAND(IDS_RIBBON_START,OnStopCtrl)
 	ON_UPDATE_COMMAND_UI(IDS_RIBBON_START, &CMainFrame::OnUpdateStopButton)
 
+	ON_WM_TIMER()
+	ON_MESSAGE(ON_COM_RECEIVE, OnComRecv)
 END_MESSAGE_MAP()
 
 // CMainFrame construction/destruction
@@ -62,10 +66,10 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	m_wndRibbonBar.Create(this);
 	InitializeRibbon();
-	
 	CheckConfigFile();
 
-	
+
+
 	// enable Visual Studio 2005 style docking window behavior
 	CDockingManager::SetDockingMode(DT_SMART);
 	// enable Visual Studio 2005 style docking window auto-hide behavior
@@ -82,7 +86,6 @@ BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 	//  the CREATESTRUCT cs
 
 	cs.style = WS_OVERLAPPED | WS_CAPTION | WS_THICKFRAME;
-
 	return TRUE;
 }
 
@@ -219,7 +222,14 @@ void CMainFrame::Dump(CDumpContext& dc) const
 
 void CMainFrame::OnConfigBT()
 {
-	m_wndParaConfigDlg.DoModal();
+	if (IDOK == m_wndParaConfigDlg.DoModal())
+	{
+		CheckConfigFile();
+		CGateCtrlView* pView = (CGateCtrlView*)GetActiveView();
+		ASSERT(pView);
+		pView->PostMessage(WM_CONFIGREADYMESSAGE,NULL,NULL);
+	}
+	
 }
 
 void CMainFrame::OnUpdateConfigButton(CCmdUI* pCmdUI)
@@ -391,6 +401,9 @@ void CMainFrame::OnStartCtrl()
 	if (m_Com.IsOpen())
 	{
 		AfxMessageBox(_T("打开成功!"));
+		m_Com.SetWnd(AfxGetMainWnd()->m_hWnd); //设置消息处理窗口 很重要 一定要有
+
+		//m_Com.Write(_T("已经打开了并且发送sdfef数据"));
 	}
 
 
@@ -411,4 +424,26 @@ void CMainFrame::OnStopCtrl()
 void CMainFrame::OnUpdateStopButton(CCmdUI* pCmdUI)
 {
 
+}
+void CMainFrame::OnTimer(UINT_PTR nIDEvent)
+{
+	// TODO: Add your message handler code here and/or call default
+	
+
+
+
+	CFrameWndEx::OnTimer(nIDEvent);
+}
+
+
+LPARAM CMainFrame::OnComRecv(WPARAM wParam, LPARAM lParam)
+{
+	CString str;
+	TCHAR buffer[100];
+	m_Com.ReadString(buffer,20);
+	str.Format(_T("%s"),buffer);
+
+	AfxMessageBox(str);
+
+	return(true);
 }

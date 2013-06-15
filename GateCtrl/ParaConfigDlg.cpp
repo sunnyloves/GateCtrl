@@ -71,8 +71,6 @@ void CParaConfigDlg::OnBnClickedOk()
 	CMainFrame* pMainFrame = (CMainFrame*)AfxGetMainWnd();
 	pMainFrame->SaveConfigToFile();
 
-
-
 	OnOK();
 }
 
