@@ -16,7 +16,7 @@
 
 #include "ParaConfigDlg.h "
 #include "CMakeUp/Markup.h"
-
+#include "CnCom/CnComm.h"
 
 typedef struct _LevelStation
 {
@@ -68,7 +68,7 @@ protected:  // control bar embedded members
 
 	CMarkup m_ConfigXml;
 	
-
+	CnComm m_Com;
 
 // Generated message map functions
 protected:
@@ -77,16 +77,24 @@ protected:
 	afx_msg void OnConfigBT();
 	afx_msg void OnUpdateConfigButton(CCmdUI* pCmdUI);
 
+	afx_msg void OnStartCtrl();
+	afx_msg void OnUpdateStartButton(CCmdUI* pCmdUI);
+
+	afx_msg void OnStopCtrl();
+	afx_msg void OnUpdateStopButton(CCmdUI* pCmdUI);
+
 	DECLARE_MESSAGE_MAP()
 
 	void InitializeRibbon();
 
 	BOOL CheckConfigFile(void);
 	void SetDefaultConfigFile(void);
-	BOOL GetConfigFromFile(void);	
+	BOOL GetConfigFromFile(void);
+	
 public:
 	ConfigInfo ciConfigInfo;
 
+	void SaveConfigToFile(void);
 };
 
 

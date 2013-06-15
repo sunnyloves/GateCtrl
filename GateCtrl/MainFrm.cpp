@@ -30,6 +30,13 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWndEx)
 
 	ON_COMMAND(ID_RIBBON_CONFIG_BT,OnConfigBT)
 	ON_UPDATE_COMMAND_UI(ID_RIBBON_CONFIG_BT, &CMainFrame::OnUpdateConfigButton)
+	
+	ON_COMMAND(IDS_RIBBON_START,OnStartCtrl)
+	ON_UPDATE_COMMAND_UI(IDS_RIBBON_START, &CMainFrame::OnUpdateStartButton)
+
+	ON_COMMAND(IDS_RIBBON_START,OnStopCtrl)
+	ON_UPDATE_COMMAND_UI(IDS_RIBBON_START, &CMainFrame::OnUpdateStopButton)
+
 END_MESSAGE_MAP()
 
 // CMainFrame construction/destruction
@@ -74,8 +81,7 @@ BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 	// TODO: Modify the Window class or styles here by modifying
 	//  the CREATESTRUCT cs
 
-	cs.style = WS_OVERLAPPED | WS_CAPTION | FWS_ADDTOTITLE
-		 | WS_THICKFRAME;
+	cs.style = WS_OVERLAPPED | WS_CAPTION | WS_THICKFRAME;
 
 	return TRUE;
 }
@@ -100,7 +106,10 @@ void CMainFrame::InitializeRibbon()
 	m_wndRibbonBar.SetApplicationButton(&m_MainButton, CSize (45, 45));
 	CMFCRibbonMainPanel* pMainPanel = m_wndRibbonBar.AddMainCategory(strTemp, IDB_FILESMALL, IDB_FILELARGE);
 
-	bNameValid = strTemp.LoadString(IDS_RIBBON_NEW);
+	bNameValid = strTemp.LoadString(IDS_RIBBON_CONFIG);
+	ASSERT(bNameValid);
+	pMainPanel->Add(new CMFCRibbonButton(ID_RIBBON_CONFIG_BT, strTemp, 4, 4));
+	/*	bNameValid = strTemp.LoadString(IDS_RIBBON_NEW);
 	ASSERT(bNameValid);
 	pMainPanel->Add(new CMFCRibbonButton(ID_FILE_NEW, strTemp, 0, 0));
 	bNameValid = strTemp.LoadString(IDS_RIBBON_OPEN);
@@ -108,7 +117,7 @@ void CMainFrame::InitializeRibbon()
 	pMainPanel->Add(new CMFCRibbonButton(ID_FILE_OPEN, strTemp, 1, 1));
 	bNameValid = strTemp.LoadString(IDS_RIBBON_SAVE);
 	ASSERT(bNameValid);
-/*	pMainPanel->Add(new CMFCRibbonButton(ID_FILE_SAVE, strTemp, 2, 2));
+	pMainPanel->Add(new CMFCRibbonButton(ID_FILE_SAVE, strTemp, 2, 2));
 	bNameValid = strTemp.LoadString(IDS_RIBBON_SAVEAS);
 	ASSERT(bNameValid);
 	pMainPanel->Add(new CMFCRibbonButton(ID_FILE_SAVE_AS, strTemp, 3, 3));
@@ -147,32 +156,29 @@ void CMainFrame::InitializeRibbon()
 	// Add "配置" category with "Clipboard" panel:
 	bNameValid = strTemp.LoadString(IDS_RIBBON_CONFIG);
 	ASSERT(bNameValid);
-	CMFCRibbonCategory* pCategoryHome = m_wndRibbonBar.AddCategory(strTemp, IDB_WRITESMALL, IDB_WRITELARGE);
+	CMFCRibbonCategory* pCategoryHome = m_wndRibbonBar.AddCategory(strTemp, IDB_FILESMALL, IDB_FILELARGE);
 
 	// Create "参数" panel:
-	strTemp.Format(_T("参数设置"));
-	
+	strTemp.Format(_T("参数设置"));	
 	CMFCRibbonPanel* pPanelConfig = pCategoryHome->AddPanel(strTemp, m_PanelImages.ExtractIcon(27));
 
 	bNameValid = strTemp.LoadString(IDS_RIBBON_CONFIG);
 	ASSERT(bNameValid);
-	CMFCRibbonButton* pBtnConfig = new CMFCRibbonButton(ID_RIBBON_CONFIG_BT, strTemp, 0, 0);
+	CMFCRibbonButton* pBtnConfig = new CMFCRibbonButton(ID_RIBBON_CONFIG_BT, strTemp, 4, 4);
 	pPanelConfig->Add(pBtnConfig);
-/*
-	bNameValid = strTemp.LoadString(IDS_RIBBON_CUT);
+
+	// Create and add a "闸门控制" panel:
+	
+	bNameValid = strTemp.LoadString(IDS_RIBBON_RUNSTATE);
 	ASSERT(bNameValid);
-	pPanelClipboard->Add(new CMFCRibbonButton(ID_EDIT_CUT, strTemp, 1));
-	bNameValid = strTemp.LoadString(IDS_RIBBON_COPY);
-	ASSERT(bNameValid);
-	pPanelClipboard->Add(new CMFCRibbonButton(ID_EDIT_COPY, strTemp, 2));
-	bNameValid = strTemp.LoadString(IDS_RIBBON_SELECTALL);
-	ASSERT(bNameValid);
-	pPanelClipboard->Add(new CMFCRibbonButton(ID_EDIT_SELECT_ALL, strTemp, -1));
-*/
-	// Create and add a "View" panel:
-	bNameValid = strTemp.LoadString(IDS_RIBBON_VIEW);
-	ASSERT(bNameValid);
-	CMFCRibbonPanel* pPanelView = pCategoryHome->AddPanel(strTemp, m_PanelImages.ExtractIcon (7));
+	CMFCRibbonPanel* pPanelRunState = pCategoryHome->AddPanel(strTemp, m_PanelImages.ExtractIcon (7));
+	
+	strTemp.Format(_T("开始"));	
+	CMFCRibbonButton* pBtnStart = new CMFCRibbonButton(IDS_RIBBON_START, strTemp, 7, 7);
+	pPanelRunState->Add(pBtnStart);
+	strTemp.Format(_T("停止"));	
+	CMFCRibbonButton* pBtnStop = new CMFCRibbonButton(IDS_RIBBON_STOP, strTemp, 6, 6);
+	pPanelRunState->Add(pBtnStop);
 
 /*	bNameValid = strTemp.LoadString(IDS_RIBBON_STATUSBAR);
 	ASSERT(bNameValid);
@@ -284,6 +290,7 @@ BOOL CMainFrame::GetConfigFromFile(void)
 	m_ConfigXml.IntoElem();
 	m_ConfigXml.FindChildElem(_T("通讯口"));
 	m_ConfigXml.IntoElem();	
+	m_ConfigXml.FindElem(_T("串口"));
 	ciConfigInfo.sCom = m_ConfigXml.GetData();
 	m_ConfigXml.OutOfElem();
 
@@ -326,4 +333,82 @@ BOOL CMainFrame::GetConfigFromFile(void)
 
 	
 	return 0;
+}
+
+
+void CMainFrame::SaveConfigToFile(void)
+{
+	CString sTemp;
+	//清空已有配置
+	m_ConfigXml.Load(_T("config.xml"));
+	m_ConfigXml.FindElem();
+	m_ConfigXml.RemoveElem();
+	
+	//根
+	m_ConfigXml.AddElem(_T("root"));
+	//一级
+	m_ConfigXml.AddChildElem(_T("通讯口"));
+	m_ConfigXml.IntoElem();
+	m_ConfigXml.AddChildElem(_T("串口"),ciConfigInfo.sCom);
+	m_ConfigXml.OutOfElem();
+	//一级
+	m_ConfigXml.AddChildElem(_T("水位站"));
+	m_ConfigXml.IntoElem();
+	//二级
+	m_ConfigXml.AddChildElem(_T("闸内水位站"));
+	m_ConfigXml.IntoElem();
+	m_ConfigXml.AddChildElem(_T("闸内水位站名称"),ciConfigInfo.lsInnerStation.sStationName);
+	sTemp.Format(_T("%.2f"),ciConfigInfo.lsInnerStation.dbLevelZero);
+	m_ConfigXml.AddChildElem(_T("闸内水位站零点(cm)"),sTemp);
+	m_ConfigXml.AddChildElem(_T("闸内水位站站号"),ciConfigInfo.lsInnerStation.sStationNO);
+	m_ConfigXml.OutOfElem();
+
+	//二级
+	m_ConfigXml.AddChildElem(_T("闸外水位站"));
+	m_ConfigXml.IntoElem();
+	m_ConfigXml.AddChildElem(_T("闸外水位站名称"),ciConfigInfo.lsOuterStation.sStationName);
+	sTemp.Format(_T("%.2f"),ciConfigInfo.lsOuterStation.dbLevelZero);
+	m_ConfigXml.AddChildElem(_T("闸外水位站零点(cm)"),sTemp);
+	m_ConfigXml.AddChildElem(_T("闸外水位站站号"),ciConfigInfo.lsOuterStation.sStationNO);
+	m_ConfigXml.OutOfElem();
+
+	m_ConfigXml.OutOfElem();
+	//一级
+	m_ConfigXml.AddChildElem(_T("水位差"));
+	m_ConfigXml.IntoElem();
+	sTemp.Format(_T("%.2f"),ciConfigInfo.dbLevelError);
+	m_ConfigXml.AddChildElem(_T("闸门开启水位差(cm)"),sTemp);
+	m_ConfigXml.OutOfElem();
+
+	m_ConfigXml.Save(_T("config.xml"));
+}
+
+void CMainFrame::OnStartCtrl()
+{
+	int i;
+	i = _wtoi(ciConfigInfo.sCom.Right(1));
+	m_Com.Open(i);
+	if (m_Com.IsOpen())
+	{
+		AfxMessageBox(_T("打开成功!"));
+	}
+
+
+}
+
+void CMainFrame::OnUpdateStartButton(CCmdUI* pCmdUI)
+{
+
+}
+
+
+void CMainFrame::OnStopCtrl()
+{
+
+}
+
+
+void CMainFrame::OnUpdateStopButton(CCmdUI* pCmdUI)
+{
+
 }

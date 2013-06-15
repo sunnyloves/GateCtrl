@@ -66,9 +66,10 @@ void CParaConfigDlg::OnPaint()
 
 void CParaConfigDlg::OnBnClickedOk()
 {
-	// TODO: Add your control notification handler code here
+	// TODO: Add your control notification handler code herev	
 	
-	
+	CMainFrame* pMainFrame = (CMainFrame*)AfxGetMainWnd();
+	pMainFrame->SaveConfigToFile();
 
 
 
@@ -96,9 +97,8 @@ void CParaConfigDlg::InitPGCtrl(void)
 	m_PGCtrl.SetAlphabeticMode(false);
 
 	m_PGCtrl.SetShowDragContext();
-	pGroup0  = new CMFCPropertyGridProperty(_T("通讯口"));
-	pGroup1 = new CMFCPropertyGridProperty(_T("水位站"));
-	pGroup2 = new CMFCPropertyGridProperty(_T("闸门开启水位差"));
+
+	pGroup0  = new CMFCPropertyGridProperty(_T("通讯口"));	
 
 	//串口选择
 	CMFCPropertyGridProperty* pProp0 = new CMFCPropertyGridProperty(_T("串口"), pMainFrame->ciConfigInfo.sCom,_T("选择通讯用的串口"));
@@ -120,6 +120,7 @@ void CParaConfigDlg::InitPGCtrl(void)
 	--------闸外水位零点
 
 	*/
+	pGroup1  = new CMFCPropertyGridProperty(_T("水位站"));
 	CMFCPropertyGridProperty* pProp10 = new CMFCPropertyGridProperty(_T("闸内水位站"),0,TRUE);
 
 	CMFCPropertyGridProperty* pProp101 = new CMFCPropertyGridProperty(_T("闸内水位站名称"),
@@ -164,13 +165,14 @@ void CParaConfigDlg::InitPGCtrl(void)
 
 	pGroup1->AddSubItem(pProp20);
 
+	m_PGCtrl.AddProperty(pGroup1);
+
+	pGroup3 = new CMFCPropertyGridProperty(_T("闸门开启水位差"));
 	CMFCPropertyGridProperty* pProp3 = new CMFCPropertyGridProperty(_T("闸门开启水位差(cm)"),
 		pMainFrame->ciConfigInfo.dbLevelError, _T("闸门开启水位差(cm)"));
 
-	pGroup1->AddSubItem(pProp3);
-
-
-	m_PGCtrl.AddProperty(pGroup1);
+	pGroup3->AddSubItem(pProp3);
+	m_PGCtrl.AddProperty(pGroup3);
 	
 
 }
@@ -194,40 +196,39 @@ LRESULT CParaConfigDlg::OnPropertyChanged (WPARAM,LPARAM lParam)
 
 	CString sParaName = pProp->GetName();  //被改变的参数名
 	COleVariant t = pProp->GetValue(); //改变之后的值
-	if (sParaName == _T("通讯口"))
+	if (sParaName == _T("串口"))
 	{
 		pMainFrame->ciConfigInfo.sCom = t.bstrVal;
 	} 
 	else if (sParaName == _T("闸内水位站名称"))
 	{
-
+		pMainFrame->ciConfigInfo.lsInnerStation.sStationName = t.bstrVal;
 	} 
 	else if (sParaName == _T("闸内水位站零点(cm)"))
 	{
-
+		pMainFrame->ciConfigInfo.lsInnerStation.dbLevelZero = t.dblVal;
 	}
 	else if (sParaName == _T("闸内水位站站号"))
 	{
-
+		pMainFrame->ciConfigInfo.lsInnerStation.sStationNO = t.bstrVal;
 	} 
 	else if (sParaName == _T("闸外水位站名称"))
 	{
-
+		pMainFrame->ciConfigInfo.lsOuterStation.sStationName = t.bstrVal;
 	}
 	else if (sParaName == _T("闸外水位站零点(cm)"))
 	{
-
+		pMainFrame->ciConfigInfo.lsOuterStation.dbLevelZero = t.dblVal;
 	} 	
-	else if (sParaName == _T("闸内水位站站号"))
+	else if (sParaName == _T("闸外水位站站号"))
 	{
-
+		pMainFrame->ciConfigInfo.lsOuterStation.sStationName = t.bstrVal;
 	} 
-
+	else if (sParaName == _T("闸门开启水位差(cm)"))
+	{
+		pMainFrame->ciConfigInfo.dbLevelError = t.dblVal;
+	} 
 	
-	t = pProp->GetOriginalValue();  //改变之前的值
-	CString d;
-
-	d = t.bstrVal;      //从COleVariant到CString
 
 	return 0;
 }

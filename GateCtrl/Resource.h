@@ -45,20 +45,24 @@
 #define IDS_RIBBON_STYLE_DESC           288
 #define IDS_RIBBON_STATUSBAR            289
 #define IDS_RIBBON_VIEW                 290
+
 #define IDS_EDIT_MENU                   306
 #define IDS_RIBBON_CONFIG               307
 #define IDS_RIBBON_COM                  308
 #define IDS_RIBBON_LEVELSTATION         309
 #define ID_RIBBON_CONFIG_BT             310
+#define ID_RIBBON_START_BT				311
 #define IDD_PARADLG                     316
 #define ID_WRITE_PASTEASHYPERLINK       32770
 #define IDC_CMFCPGCTRL					1000
-
+#define IDS_RIBBON_START				317
+#define IDS_RIBBON_STOP					318
+#define IDS_RIBBON_RUNSTATE				319
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        317
+#define _APS_NEXT_RESOURCE_VALUE        322
 #define _APS_NEXT_COMMAND_VALUE         32771
 #define _APS_NEXT_CONTROL_VALUE         1007
 #define _APS_NEXT_SYMED_VALUE           310
