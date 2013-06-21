@@ -17,7 +17,7 @@
 #include "ParaConfigDlg.h "
 #include "CMakeUp/Markup.h"
 #include "CnCom/CnComm.h"
-
+#include "CardDriver/Driver.h"
 
 typedef struct _LevelStation
 {
@@ -72,8 +72,22 @@ protected:  // control bar embedded members
 	CMarkup m_ConfigXml;
 	
 	CnComm m_Com;
+	
+	BOOL m_bConfigBTState;
+	BOOL m_bStartBTState;
+	BOOL m_bStopBTState;
+	char m_ComTemp[10];				//串口缓冲区
+	BOOL m_bStationNOFlag;			//站号标识 0为1号站  1为2号站
+
+
 
 	
+
+	
+
+
+
+
 // Generated message map functions
 protected:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
@@ -99,7 +113,17 @@ protected:
 	
 public:
 	ConfigInfo ciConfigInfo;
+	double m_dbInnerLevel;
+	double m_dbOuterLevel;
+	double m_dbLevelError;
 
+	LRESULT     m_lrErrCode;
+	LONG        m_lDriverHandle;          // driver handle
+	BYTE		m_byOutData	;
+	PT_DioWritePortByte m_ptDioWritePortByte; // DioWritePortByte table
+
+
+public:
 	void SaveConfigToFile(void);
 
 };

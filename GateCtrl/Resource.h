@@ -61,6 +61,7 @@
 
 
 #define WM_CONFIGREADYMESSAGE			WM_USER+30
+#define WM_UPDATELEVEL					WM_USER+31
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED

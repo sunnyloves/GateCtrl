@@ -30,7 +30,7 @@ IMPLEMENT_DYNCREATE(CGateCtrlView, CView)
 
 BEGIN_MESSAGE_MAP(CGateCtrlView, CView)
 	ON_MESSAGE(WM_CONFIGREADYMESSAGE, OnInitView)
-	
+	ON_MESSAGE(WM_UPDATELEVEL,OnUpdateView)
 	
 	ON_WM_SIZE()
 END_MESSAGE_MAP()
@@ -42,10 +42,6 @@ CGateCtrlView::CGateCtrlView()
 	// TODO: add construction code here
 	m_bIsInitDone = FALSE;
 	m_bIsGateOpen = FALSE;
-	m_dbInnerLevel = 0.00;
-	m_dbOuterLevel = 0.00;
-	m_dbLevelError = 0.00;
-
 }
 
 CGateCtrlView::~CGateCtrlView()
@@ -119,6 +115,9 @@ LRESULT CGateCtrlView::OnInitView(WPARAM wParam, LPARAM lParam)
 
 	ShowStaticText();
 	m_bIsInitDone = TRUE;
+
+
+
 	return(0);
 
 }
@@ -150,12 +149,16 @@ void CGateCtrlView::ShowStaticText(void)
 	
 	pOldFont = pDC->SelectObject(&m_font);
 	//固定文本
+	pDC->TextOut(50,10,_T("通讯口:"));
+	sTemp = pMainFrame->ciConfigInfo.sCom;
+	pDC->TextOut(220,10,sTemp);
+
 	pDC->TextOut(50,50,_T("闸内站:"));
 	sTemp = pMainFrame->ciConfigInfo.lsInnerStation.sStationName;	
 	pDC->TextOut(220,50,sTemp);
 
 	pDC->TextOut(350,50,_T("水位:"));
-	sTemp.Format(_T("%.2f"), m_dbInnerLevel);
+	sTemp.Format(_T("%.3f"), pMainFrame->m_dbInnerLevel);
 	pDC->TextOut(500,50,sTemp);
 
 
@@ -164,15 +167,13 @@ void CGateCtrlView::ShowStaticText(void)
 	pDC->TextOut(220,100,sTemp);
 
 	pDC->TextOut(350,100,_T("水位:"));
-	sTemp.Format(_T("%.2f"), m_dbOuterLevel);
-	pDC->TextOut(500,100,sTemp);
+
 
 	pDC->TextOut(50,150,_T("闸内外水位差:"));
-	sTemp.Format(_T("%.2f"), m_dbLevelError);
-	pDC->TextOut(220,150,sTemp);
+
 
 	pDC->TextOut(350,150,_T("开启水位差:"));
-	sTemp.Format(_T("%.2f"), pMainFrame->ciConfigInfo.dbLevelError);	
+	sTemp.Format(_T("%.2f"), pMainFrame->ciConfigInfo.dbLevelError) ;	
 	pDC->TextOut(500,150,sTemp);
 
 	//
@@ -192,4 +193,75 @@ void CGateCtrlView::ShowStaticText(void)
 
 	pDC->SelectObject(pOldFont);
 
+}
+
+
+LRESULT CGateCtrlView::OnUpdateView( WPARAM wParam, LPARAM lParam )
+{
+	ShowDynmicText();
+
+	IO();
+	
+	
+	return(0);
+}
+void CGateCtrlView::ShowDynmicText(void)
+{
+	CString sTemp;
+
+	CDC* pDC = GetDC();
+	ASSERT(pDC);
+	CMainFrame* pMainFrame = (CMainFrame*)AfxGetMainWnd();	
+
+	CFont *pOldFont,m_font;
+
+	VERIFY(m_font.CreatePointFont(170,_T("宋体"))); 
+
+
+	pOldFont = pDC->SelectObject(&m_font);
+	pDC->SetTextColor(RGB(0,255,255));
+
+	//实时闸内水位
+	sTemp.Format(_T("%.2f"), pMainFrame->m_dbInnerLevel);
+	pDC->TextOut(500,50,sTemp);
+
+	//实时闸外水位
+	sTemp.Format(_T("%.2f"), pMainFrame->m_dbOuterLevel);
+	pDC->TextOut(500,100,sTemp);
+	
+	//实时水位差
+	pMainFrame->m_dbLevelError = pMainFrame->m_dbInnerLevel - pMainFrame->m_dbOuterLevel;
+	
+	sTemp.Format(_T("%.2f"), pMainFrame->m_dbLevelError);	
+	pDC->TextOut(200,150,sTemp);
+
+	pDC->SelectObject(pOldFont);
+
+	//UpdateWindow();
+	
+}
+
+void CGateCtrlView::IO(void)
+{
+	CMainFrame* pMainFrame = (CMainFrame*)AfxGetMainWnd();	
+	pMainFrame->m_ptDioWritePortByte.port = 0;
+	pMainFrame->m_ptDioWritePortByte.mask  = 0xff;
+	
+	if ((pMainFrame->m_dbLevelError) > (pMainFrame->ciConfigInfo.dbLevelError))
+	{//闭合
+		BYTE m_byOutData = 0x01;
+
+		pMainFrame->m_ptDioWritePortByte.state = m_byOutData;
+		DRV_DioWritePortByte(pMainFrame->m_lDriverHandle,
+			(LPT_DioWritePortByte)&(pMainFrame->m_ptDioWritePortByte));
+
+	}
+	else
+	{//打开
+		BYTE m_byOutData = 0x00;
+
+		pMainFrame->m_ptDioWritePortByte.state = m_byOutData;
+		DRV_DioWritePortByte(pMainFrame->m_lDriverHandle,
+			(LPT_DioWritePortByte)&(pMainFrame->m_ptDioWritePortByte));
+	}
 }

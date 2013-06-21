@@ -67,7 +67,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="adsapi32.lib"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="&quot;C:\Documents and Settings\Administrator\My Documents\GitHub\GateCtrl\GateCtrl\CardDriver&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -129,7 +131,7 @@
 				MinimalRebuild="false"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
-				UsePrecompiledHeader="2"
+				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				DebugInformationFormat="3"
 			/>
@@ -147,7 +149,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="adsapi32.lib"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="&quot;C:\Documents and Settings\Administrator\My Documents\GitHub\GateCtrl\GateCtrl\CardDriver&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -292,6 +296,14 @@
 				>
 				<File
 					RelativePath=".\CMakeUp\Markup.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="CardDriver"
+				>
+				<File
+					RelativePath=".\CardDriver\Driver.h"
 					>
 				</File>
 			</Filter>

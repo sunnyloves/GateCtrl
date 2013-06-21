@@ -36,8 +36,8 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWndEx)
 	ON_COMMAND(IDS_RIBBON_START,OnStartCtrl)
 	ON_UPDATE_COMMAND_UI(IDS_RIBBON_START, &CMainFrame::OnUpdateStartButton)
 
-	ON_COMMAND(IDS_RIBBON_START,OnStopCtrl)
-	ON_UPDATE_COMMAND_UI(IDS_RIBBON_START, &CMainFrame::OnUpdateStopButton)
+	ON_COMMAND(IDS_RIBBON_STOP,OnStopCtrl)
+	ON_UPDATE_COMMAND_UI(IDS_RIBBON_STOP, &CMainFrame::OnUpdateStopButton)
 
 	ON_WM_TIMER()
 	ON_MESSAGE(ON_COM_RECEIVE, OnComRecv)
@@ -48,6 +48,15 @@ END_MESSAGE_MAP()
 CMainFrame::CMainFrame()
 {
 	// TODO: add member initialization code here
+	m_bConfigBTState = TRUE;
+	m_bStartBTState = FALSE;
+	m_bStopBTState = FALSE;
+	m_dbInnerLevel = 0.0;
+	m_dbOuterLevel = 0.0;
+	m_dbLevelError = 0.0;
+	m_bStationNOFlag = FALSE;
+
+
 }
 
 CMainFrame::~CMainFrame()
@@ -228,12 +237,16 @@ void CMainFrame::OnConfigBT()
 		CGateCtrlView* pView = (CGateCtrlView*)GetActiveView();
 		ASSERT(pView);
 		pView->PostMessage(WM_CONFIGREADYMESSAGE,NULL,NULL);
+		m_bConfigBTState = FALSE;
+		m_bStartBTState = TRUE;
+		
 	}
 	
 }
 
 void CMainFrame::OnUpdateConfigButton(CCmdUI* pCmdUI)
-{
+{	
+	pCmdUI->Enable(m_bConfigBTState);
 	
 }
 
@@ -395,40 +408,78 @@ void CMainFrame::SaveConfigToFile(void)
 
 void CMainFrame::OnStartCtrl()
 {
+	//串口
 	int i;
 	i = _wtoi(ciConfigInfo.sCom.Right(1));
 	m_Com.Open(i);
 	if (m_Com.IsOpen())
 	{
-		AfxMessageBox(_T("打开成功!"));
-		m_Com.SetWnd(AfxGetMainWnd()->m_hWnd); //设置消息处理窗口 很重要 一定要有
+		//AfxMessageBox(_T("打开成功!"));
+		m_Com.SetWnd(m_hWnd); //设置消息处理窗口 很重要 一定要有
+		m_bConfigBTState = FALSE;
+		m_bStartBTState = FALSE;
+		m_bStopBTState = TRUE;
 
-		//m_Com.Write(_T("已经打开了并且发送sdfef数据"));
+		SetTimer(1,1000,NULL);
+		
 	}
+	//725卡
+	//DRV_DeviceOpen(dwDeviceNum,(LONG far*)&DriverHandle)参数说明：dwDeviceNum
+	//是设备号，该号码在研华提供的Device Manger中可以查看到，设备前面的000 001
+
+	m_lrErrCode = DRV_DeviceOpen(0,(LONG far *)&m_lDriverHandle);
+	if (m_lrErrCode != SUCCESS)
+	{
+		AfxMessageBox(_T("Device open error !"));
+
+		return;
+	}
+	else
+	{
+		AfxMessageBox(_T("ok !"));
+	}
+
+
+
+
 
 
 }
 
 void CMainFrame::OnUpdateStartButton(CCmdUI* pCmdUI)
 {
-
+	pCmdUI->Enable(m_bStartBTState);
 }
 
 
 void CMainFrame::OnStopCtrl()
 {
+	m_Com.Close();
+	KillTimer(1);
 
+	DRV_DeviceClose((LONG far *)&m_lDriverHandle);
+	m_bConfigBTState = TRUE;
+	m_bStartBTState = FALSE;
+	m_bStopBTState = FALSE;
 }
 
 
 void CMainFrame::OnUpdateStopButton(CCmdUI* pCmdUI)
 {
-
+	pCmdUI->Enable(m_bStopBTState);
 }
 void CMainFrame::OnTimer(UINT_PTR nIDEvent)
 {
 	// TODO: Add your message handler code here and/or call default
 	
+	if (nIDEvent == 1)
+	{
+		m_bStopBTState = FALSE;
+		m_Com.Write("A01");
+		for(int i=0;i<1000;i++);			//延时等待接收
+		m_bStopBTState = TRUE;
+		m_Com.Write("A02");
+	}
 
 
 
@@ -438,12 +489,26 @@ void CMainFrame::OnTimer(UINT_PTR nIDEvent)
 
 LPARAM CMainFrame::OnComRecv(WPARAM wParam, LPARAM lParam)
 {
-	CString str;
-	TCHAR buffer[100];
-	m_Com.ReadString(buffer,20);
-	str.Format(_T("%s"),buffer);
 
-	AfxMessageBox(str);
+	m_Com.ReadString(m_ComTemp,10);
+	if (!m_bStopBTState)
+	{//1号站
+		m_dbInnerLevel = atof(m_ComTemp)/100000.0;
+		m_dbInnerLevel += ciConfigInfo.lsInnerStation.dbLevelZero;
+
+	}
+	else
+	{//2号
+		m_dbOuterLevel = atof(m_ComTemp)/100000.0;
+		m_dbOuterLevel += ciConfigInfo.lsOuterStation.dbLevelZero;
+
+	}
+	
+	CGateCtrlView* pView = (CGateCtrlView*)GetActiveView();
+	ASSERT(pView);
+	pView->PostMessage(WM_UPDATELEVEL,NULL,NULL);
+	
+
 
 	return(true);
 }
