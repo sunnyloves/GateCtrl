@@ -67,7 +67,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="adsapi32.lib"
+				AdditionalDependencies="adsapi32.lib setupapi.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;C:\Documents and Settings\Administrator\My Documents\GitHub\GateCtrl\GateCtrl\CardDriver&quot;"
 				GenerateDebugInformation="true"
@@ -149,7 +149,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="adsapi32.lib"
+				AdditionalDependencies="adsapi32.lib setupapi.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;C:\Documents and Settings\Administrator\My Documents\GitHub\GateCtrl\GateCtrl\CardDriver&quot;"
 				GenerateDebugInformation="true"
@@ -245,6 +245,14 @@
 					</FileConfiguration>
 				</File>
 			</Filter>
+			<Filter
+				Name="EnumSerial"
+				>
+				<File
+					RelativePath=".\EnumSerial\EnumSerial.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -304,6 +312,14 @@
 				>
 				<File
 					RelativePath=".\CardDriver\Driver.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="EnumSerial"
+				>
+				<File
+					RelativePath=".\EnumSerial\EnumSerial.h"
 					>
 				</File>
 			</Filter>

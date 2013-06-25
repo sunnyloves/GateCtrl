@@ -2,6 +2,7 @@
 
 
 #include "CMakeUp/Markup.h"
+#include "EnumSerial/EnumSerial.h"
 
 // CParaConfigDlg dialog
 
@@ -31,6 +32,9 @@ protected:
 	CMFCPropertyGridProperty* pGroup3;
 	
 
+	int m_nSerialPortNum;		// 串口计数
+	CString  m_sSerialList[12];		// 字符串组
+	CArray<SSerInfo,SSerInfo&> asi;	//枚举串口
 
 public:
 	afx_msg void OnPaint();

@@ -99,11 +99,20 @@ void CParaConfigDlg::InitPGCtrl(void)
 	pGroup0  = new CMFCPropertyGridProperty(_T("通讯口"));	
 
 	//串口选择
+	EnumSerialPorts(asi,TRUE);// 参数为 TRUE 时枚举当前可以打开的串口， 否则枚举所有串口
+	m_nSerialPortNum = 0;
+	m_nSerialPortNum = asi.GetSize();
+	CString s;
+	
+	
 	CMFCPropertyGridProperty* pProp0 = new CMFCPropertyGridProperty(_T("串口"), pMainFrame->ciConfigInfo.sCom,_T("选择通讯用的串口"));
-	pProp0->AddOption(_T("COM1"));
-	pProp0->AddOption(_T("COM2"));
-	pProp0->AddOption(_T("COM3"));
-	pProp0->AddOption(_T("COM4"));
+
+	for (int i=0; i<asi.GetSize(); i++)
+	{
+		s = _T("COM") + asi[i].strFriendlyName.Right(2);	//拼出COMx
+		pProp0->AddOption(s.Left(4));
+
+	}
 	pProp0->AllowEdit(FALSE);
 	pGroup0->AddSubItem(pProp0);
 	m_PGCtrl.AddProperty(pGroup0);
