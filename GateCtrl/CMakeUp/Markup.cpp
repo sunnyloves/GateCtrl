@@ -6,6 +6,7 @@
 // Use in commercial applications requires written permission
 // This software is provided "as is", with no warranty.
 //
+
 #include <stdio.h>
 #include "Markup.h"
 

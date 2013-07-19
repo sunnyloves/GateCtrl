@@ -308,7 +308,7 @@ STRINGTABLE
 BEGIN
     IDS_RIBBON_STYLE_DESC   "Choose one of the Office 2007 themes"
     IDS_RIBBON_STATUSBAR    "Status Bar"
-    IDS_RIBBON_VIEW         "View"
+    IDS_RIBBON_VIEW         "视图"
 END
 
 STRINGTABLE 
@@ -320,6 +320,11 @@ BEGIN
     IDS_RIBBON_START        "闸门控制"
     IDS_RIBBON_STOP         "停止"
     IDS_RIBBON_RUNSTATE     "运行状态"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_RIBBON_CHARTVIEW    "曲线选择"
 END
 
 #endif    // Chinese (P.R.C.) resources

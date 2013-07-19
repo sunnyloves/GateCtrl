@@ -55,11 +55,15 @@
 #define IDD_PARADLG                     316
 #define ID_WRITE_PASTEASHYPERLINK       32770
 #define IDC_CMFCPGCTRL					1000
+#define IDC_LEVELCHARTCTRL				1001
+#define ID_PANE_DATA					1002
+#define IDC_INFOLISTCTRL				1003
 #define IDS_RIBBON_START				317
 #define IDS_RIBBON_STOP					318
 #define IDS_RIBBON_RUNSTATE				319
-
-
+#define IDS_RIBBON_CHARTVIEW			320
+#define IDS_RIBBON_NEXTCHART_BT			321
+#define IDS_RIBBON_NEXTCHART_EDIT		322
 #define WM_CONFIGREADYMESSAGE			WM_USER+30
 #define WM_UPDATELEVEL					WM_USER+31
 // Next default values for new objects

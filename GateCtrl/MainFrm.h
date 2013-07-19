@@ -18,23 +18,54 @@
 #include "CMakeUp/Markup.h"
 #include "CnCom/CnComm.h"
 #include "CardDriver/Driver.h"
+#include "DataShowPane.h"
+
+
+
 
 typedef struct _LevelStation
-{
-	CString sStationName;
-	double dbLevelZero;
-	CString sStationNO;
+{	
+	double dbLevelZero;				//零点
+	CString sStationNO;				//站号
+
 }LevelStation;
 
+typedef struct _LevelStationCombo
+{
+	LevelStation lsInnerStation;	//内站
+	LevelStation lsOuterStation;	//外站
 
+}LevelStationCombo;
+
+typedef struct _CtrlLevel
+{
+	double dbDeadLevel;				//死区水位
+	double dbLevelError;			//开启水位差
+
+}CtrlLevel;
 
 typedef struct _ConfigInfo
 {
 	CString sCom;
-	LevelStation lsInnerStation;
-	LevelStation lsOuterStation;
-	double dbLevelError;
+	LevelStationCombo lsc_1;
+	LevelStationCombo lsc_2;
+	CtrlLevel clCtrlLevel;
+
 }ConfigInfo;
+
+
+typedef struct _LevelData
+{
+	double dbInnerLevel_1;
+	double dbOuterLevel_1;
+	double dbInnerLevel_2;
+	double dbOuterLevel_2;
+
+}LevelData;
+
+
+
+
 
 
 
@@ -68,6 +99,7 @@ protected:  // control bar embedded members
 	CMFCRibbonApplicationButton m_MainButton;
 	CMFCToolBarImages m_PanelImages;
 	CParaConfigDlg m_wndParaConfigDlg;
+	CDataShowPane m_wndDataShowPane;
 
 	CMarkup m_ConfigXml;
 	
@@ -76,9 +108,9 @@ protected:  // control bar embedded members
 	BOOL m_bConfigBTState;
 	BOOL m_bStartBTState;
 	BOOL m_bStopBTState;
-	char m_ComTemp[10];				//串口缓冲区
-	BOOL m_bStationNOFlag;			//站号标识 0为1号站  1为2号站
-
+	BOOL m_bNextChartBTState;
+	BOOL m_bNextLevelCombo;				//交替显示2组水位标志位
+	CStdioFile m_LevelFile;
 
 
 // Generated message map functions
@@ -93,7 +125,11 @@ protected:
 
 	afx_msg void OnStopCtrl();
 	afx_msg void OnUpdateStopButton(CCmdUI* pCmdUI);
-	afx_msg LRESULT OnComRecv(WPARAM wParam, LPARAM lParam);
+
+	afx_msg void OnNextChartClick();
+	afx_msg void OnUpdateNextChartButton(CCmdUI* pCmdUI);
+
+
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 
 	DECLARE_MESSAGE_MAP()
@@ -103,13 +139,18 @@ protected:
 	BOOL CheckConfigFile(void);
 	void SetDefaultConfigFile(void);
 	BOOL GetConfigFromFile(void);
-	
+	void WriteLevelToFile(void);
 public:
 	ConfigInfo ciConfigInfo;
-	double m_dbInnerLevel;
-	double m_dbOuterLevel;
-	double m_dbLevelError;
 
+	char m_ComTemp[10];
+
+	double m_dbLevelError_1;		//实时误差1#站
+	double m_dbLevelError_2;		//实时误差2#站
+
+	LevelData m_ldLevelData;
+	CArray<LevelData,LevelData&> m_LevelDataArray;
+	//725
 	LRESULT     m_lrErrCode;
 	LONG        m_lDriverHandle;          // driver handle
 	BYTE		m_byOutData	;

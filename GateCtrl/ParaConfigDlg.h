@@ -29,6 +29,7 @@ protected:
 
 	CMFCPropertyGridProperty* pGroup0;
 	CMFCPropertyGridProperty* pGroup1;
+	CMFCPropertyGridProperty* pGroup2;
 	CMFCPropertyGridProperty* pGroup3;
 	
 

@@ -12,7 +12,8 @@
 // GateCtrlView.h : interface of the CGateCtrlView class
 //
 
-
+#include "ChartCtrl/ChartCtrl.h"
+#include "ChartCtrl/ChartLineSerie.h"
 #pragma once
 
 
@@ -33,6 +34,7 @@ public:
 public:
 	virtual void OnDraw(CDC* pDC);  // overridden to draw this view
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
+	virtual void OnInitialUpdate();
 protected:
 
 // Implementation
@@ -44,9 +46,9 @@ public:
 #endif
 
 protected:
-	BOOL m_bIsInitDone;
-	BOOL m_bIsGateOpen;
-	
+
+
+	int nCnt;									//µã×ÜÊý
 
 // Generated message map functions
 protected:
@@ -56,12 +58,30 @@ protected:
 	afx_msg LRESULT OnInitView( WPARAM wParam, LPARAM lParam );
 	afx_msg LRESULT OnUpdateView( WPARAM wParam, LPARAM lParam );
 	afx_msg void OnSize(UINT nType, int cx, int cy);
+	afx_msg void OnPaint();
 	DECLARE_MESSAGE_MAP()
+
+
+protected:
+	void AdjustLayout(void);
+
+
 public:
-	void ShowInitView(void);	
-	void ShowStaticText(void);
-	void ShowDynmicText(void);
+//	void ShowInitView(void);	
+//	void ShowStaticText(void);
+//	void ShowDynmicText(void);
 	void IO(void);
+
+public:
+	CChartCtrl			m_LevelChartCtrl;
+	CChartLineSerie*	m_pLevel1inLineSeries;
+	CChartLineSerie*	m_pLevel1outLineSeries;
+	CChartLineSerie*	m_pLevel2inLineSeries;
+	CChartLineSerie*	m_pLevel2outLineSeries;
+
+
+
+
 };
 
 #ifndef _DEBUG  // debug version in GateCtrlView.cpp
